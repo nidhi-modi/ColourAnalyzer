@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ColourAnalyzer</string>
+    <string name="title_name">T&amp;G Fresh</string>
+    <string name="exact_match">Exact Color Match  :   </string>
+    <string name="closest_match">Closest Color Match  :   </string>
+
 </resources>
