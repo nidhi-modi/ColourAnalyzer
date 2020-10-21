@@ -1,5 +1,6 @@
 package com.tandg.colouranalyzer;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -31,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,15 +44,27 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
 
     private static final String TAG = ColorDetectorActivity.class.getSimpleName();
 
-    @BindView(R.id.imgCamera)                   ImageView imgCamera;
-    @BindView(R.id.imgGallery)                  ImageView imgGallery;
-    @BindView(R.id.imgCircle)                   ImageView imgCircle;
-    @BindView(R.id.txtColorName)                TextView txtColorName;
-    @BindView(R.id.txtColorNumber)              TextView txtColorNumber;
+    @BindView(R.id.imgCamera)
+    ImageView imgCamera;
+    @BindView(R.id.imgGallery)
+    ImageView imgGallery;
+    @BindView(R.id.imgCircle)
+    ImageView imgCircle;
+    @BindView(R.id.txtColorName)
+    TextView txtColorName;
+    @BindView(R.id.txtColorNumber)
+    TextView txtColorNumber;
+    @BindView(R.id.txtPath)
+    TextView txtPath;
+    @BindView(R.id.simpleProgressBar)
+    ProgressBar progressBar;
 
-
-    String imagePath;
+    String imagePath , colorName;
     PyObject pyObject;
+    PyObject colorMatch;
+    String rCode, gCode, bCode, colorNumber;
+    String r, g, b, num;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +73,7 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
 
         ButterKnife.bind(this);
 
-        if (! Python.isStarted()) {
+        if (!Python.isStarted()) {
             Python.start(new AndroidPlatform(this));
         }
 
@@ -76,13 +91,17 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
         imgCamera.setOnClickListener(this);
         imgGallery.setOnClickListener(this);
 
+
+
     }
 
     @Override
     public void onClick(View v) {
 
+        progressBar.setVisibility(View.VISIBLE);
+
         int id = v.getId();
-        switch (id){
+        switch (id) {
 
             case R.id.imgCamera:
 
@@ -90,15 +109,12 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
                 startActivityForResult(takePicture, 1);
 
 
-
                 break;
 
             case R.id.imgGallery:
 
-                Intent intentGallery = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent intentGallery = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intentGallery, 2);
-
-
 
 
                 break;
@@ -142,27 +158,12 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
 
                 imagePath = finalFile.getPath();
 
-                Log.e(TAG, "PATH FROM CAMERA: "+finalFile);
+                Log.e(TAG, "PATH FROM CAMERA: " + finalFile);
 
-                PyObject obj = pyObject.callAttr("processimage",imagePath);
-
-                for (int i = 0; i < obj.asList().size(); i++){
-
-                    Log.e(TAG, "Value of element : "+i + " "+ obj.asList().get(i));
-
-                }
+                callThePythonCode();
 
 
 
-                //testing
-
-                Drawable tempDrawable = getResources().getDrawable(R.drawable.custom_shapes);
-                LayerDrawable bubble = (LayerDrawable) tempDrawable;
-                GradientDrawable solidColor = (GradientDrawable) bubble.findDrawableByLayerId(R.id.outerRectangle);
-                solidColor.setColor(Color.rgb(120,109,60));
-                imgCircle.setImageDrawable(tempDrawable);
-
-                //
 
             } else if (requestCode == 2) {
                 Uri selectedImage = data.getData();
@@ -176,17 +177,89 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
 
                 imagePath = picturePath;
 
-                Log.e(TAG, "PATH FROM GALLERY: "+picturePath);
+                Log.e(TAG, "PATH FROM GALLERY: " + picturePath);
 
-                PyObject obj2 = pyObject.callAttr("processimage",imagePath);
-                for (int i = 0; i < obj2.asList().size(); i++){
+                callThePythonCode();
 
-                    Log.e(TAG, "Value of element : "+i + " "+ obj2.asList().get(i));
 
-                }
-                //viewImage.setImageBitmap(thumbnail);
             }
         }
 
     }
+
+    private void callThePythonCode() {
+
+        txtPath.setText(imagePath);
+
+        if (txtPath.getText().toString().matches("")) {
+
+            Log.e(TAG, "Path is null");
+
+        } else {
+
+            PyObject obj2 = pyObject.callAttr("processimage", imagePath);
+            for (int i = 0; i < obj2.asList().size(); i++) {
+
+                Log.e(TAG, "Value of element : " + i + " " + obj2.asList().get(i));
+
+                colorMatch = obj2.asList().get(0);
+                rCode = String.valueOf(obj2.asList().get(1));
+                gCode = String.valueOf(obj2.asList().get(2));
+                bCode = String.valueOf(obj2.asList().get(3));
+
+            }
+
+            for (int i = 0; i < colorMatch.asList().size(); i++) {
+
+                Log.e(TAG, "Value of 2nd element : " + i + " " + colorMatch.asList().get(i));
+
+                colorName = String.valueOf(colorMatch.asList().get(0));
+                colorNumber = String.valueOf(colorMatch.asList().get(1));
+
+
+            }
+
+
+
+            //set RGB
+
+            r = String.format("%.0f",Float.parseFloat(rCode));
+            g = String.format("%.0f",Float.parseFloat(gCode));
+            b = String.format("%.0f",Float.parseFloat(bCode));
+            num = String.format("%.2f",Float.parseFloat(colorNumber));
+
+            Log.e(TAG, "callThePythonCode: "+ String.format("%.0f",Float.parseFloat(rCode))+ " "+ String.format("%.0f",Float.parseFloat(gCode))+ " "+String.format("%.0f",Float.parseFloat(bCode)));
+
+
+            //Set the textview
+
+            txtColorName.setText("\t\t"+colorName);
+            txtColorNumber.setText("\t\t"+num);
+
+            if(txtColorNumber.getText().toString().matches("")){
+
+                progressBar.setVisibility(View.VISIBLE);
+
+
+
+
+            }else {
+
+                progressBar.setVisibility(View.GONE);
+
+            }
+
+
+            Drawable tempDrawable = getResources().getDrawable(R.drawable.custom_shapes);
+            LayerDrawable bubble = (LayerDrawable) tempDrawable;
+            GradientDrawable solidColor = (GradientDrawable) bubble.findDrawableByLayerId(R.id.outerRectangle);
+            solidColor.setColor(Color.rgb(Integer.parseInt(r),Integer.parseInt(g),Integer.parseInt(b)));
+            imgCircle.setImageDrawable(tempDrawable);
+
+
+
+
+        }
+
     }
+}

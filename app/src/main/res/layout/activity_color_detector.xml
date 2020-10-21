@@ -34,6 +34,16 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/txtPath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:fontFamily="serif-monospace"
+        android:textSize="@dimen/_14sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:visibility="gone"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,6 +59,7 @@
             android:textColor="@color/black"
             android:fontFamily="serif-monospace"
             android:textSize="@dimen/_14sdp"
+            android:textStyle="bold"
             android:text="@string/exact_match"/>
 
 
@@ -56,11 +67,13 @@
             android:id="@+id/txtColorName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:textColor="@color/black"
             android:fontFamily="serif-monospace"
-            android:textSize="@dimen/_14sdp"
-            android:text="  123"/>
+            android:textStyle="bold"
+            android:textSize="@dimen/_18sdp"
+            android:text="   --"
+
+            />
 
 
 
@@ -80,6 +93,7 @@
             android:textColor="@color/black"
             android:fontFamily="serif-monospace"
             android:textSize="@dimen/_14sdp"
+            android:textStyle="bold"
             android:text="@string/closest_match"/>
 
 
@@ -89,8 +103,10 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:fontFamily="serif-monospace"
-            android:textSize="@dimen/_14sdp"
-            android:text="  123" />
+            android:textStyle="bold"
+            android:textSize="@dimen/_18sdp"
+            android:text="   --"
+            />
 
     </LinearLayout>
 
@@ -101,6 +117,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-
+    <ProgressBar
+        android:id="@+id/simpleProgressBar"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </LinearLayout>
