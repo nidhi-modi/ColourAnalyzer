@@ -146,17 +146,17 @@ def processimage (ImageToProcess):
     print('Loading...')
     #Variables--------------------------------------------------------------------------------------------------------------
     imglocation = ImageToProcess
+
     colourtoignore = [100,100,100]
     numberofcolourstoshow = 20
 
 
     #Read Images------------------------------------------------------------------------------------------------------------
-    img = io.imread(imglocation)
-    # img = io.imread(imglocation)[:, :, :-1] #this is png thing
-    img2 = Image.open(imglocation)
+    img = res
+
 
     #Count Colors-----------------------------------------------------------------------------------------------------------
-    colors = img2.convert('RGB').getcolors(maxcolors=1000000) #this converts the mode to RGB
+    # colors = img2.convert('RGB').getcolors(maxcolors=1000000) #this converts the mode to RGB
     # print(len(colors))
 
     #Average Pixels (RGB)---------------------------------------------------------------------------------------------------
@@ -166,13 +166,13 @@ def processimage (ImageToProcess):
     notblack = []
     black = []
     for pixel in img:
-        for colour in pixel:
-            if np.all(colour < colourtoignore):
-                black.append(colour)
-                # print('Black')
-            else:
-                # print('Not Black')
-                notblack.append(colour)
+     for colour in pixel:
+        if np.all(colour < colourtoignore):
+            black.append(colour)
+            # print('Black')
+        else:
+            # print('Not Black')
+            notblack.append(colour)
 
 
     averageignoredcolour = np.mean(notblack,axis=0) # Axis 0 will act on all the ROWS in each COLUM # Axis 1 will act on all the COLUMNS in each ROW
@@ -203,10 +203,10 @@ def processimage (ImageToProcess):
 
 
     #Analysis colours to find closest match to Tomato Grade-----------------------------------------------------------------
-    # sht.range('A'+str(rownumber)).value = imgname
-    # sht.range('B'+str(rownumber)).value = LABColours
-    # sht.range('E'+str(rownumber)).value = HSVColours
-    # sht.range('H'+str(rownumber)).value = averageignoredcolour
+   # sht.range('A'+str(rownumber)).value = imgname
+   # sht.range('B'+str(rownumber)).value = LABColours
+   # sht.range('E'+str(rownumber)).value = HSVColours
+   # sht.range('H'+str(rownumber)).value = averageignoredcolour
 
 
     number1 = colourranking(LABColours[0],LABColours[1],LABColours[2]) #This is what we need returned
@@ -215,6 +215,7 @@ def processimage (ImageToProcess):
     number4 = str(averageignoredcolour[2])
     return (number1,number2,number3,number4)
     print('***********Done!***********')
+
 
 
 #processimage (r'/storage/emulated/0/Pictures/background.jpg')

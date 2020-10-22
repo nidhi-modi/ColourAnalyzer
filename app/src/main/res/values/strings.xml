@@ -3,5 +3,9 @@
     <string name="title_name">T&amp;G Fresh</string>
     <string name="exact_match">Exact Color Match  :   </string>
     <string name="closest_match">Closest Color Match  :   </string>
+    <string name="r_number">Red Code  :   </string>
+    <string name="g_number">Green Code  :   </string>
+    <string name="b_number">Blue Code  :   </string>
+
 
 </resources>

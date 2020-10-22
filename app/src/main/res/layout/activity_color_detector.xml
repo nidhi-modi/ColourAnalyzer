@@ -110,12 +110,106 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="serif-monospace"
+            android:textSize="@dimen/_14sdp"
+            android:textStyle="bold"
+            android:text="@string/r_number"/>
+
+
+        <TextView
+            android:id="@+id/txtRedNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="serif-monospace"
+            android:textStyle="bold"
+            android:textSize="@dimen/_18sdp"
+            android:text="   --"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="serif-monospace"
+            android:textSize="@dimen/_14sdp"
+            android:textStyle="bold"
+            android:text="@string/g_number"/>
+
+
+        <TextView
+            android:id="@+id/txtGreenNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="serif-monospace"
+            android:textStyle="bold"
+            android:textSize="@dimen/_18sdp"
+            android:text="   --"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="serif-monospace"
+            android:textSize="@dimen/_14sdp"
+            android:textStyle="bold"
+            android:text="@string/b_number"/>
+
+
+        <TextView
+            android:id="@+id/txtBlueNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:fontFamily="serif-monospace"
+            android:textStyle="bold"
+            android:textSize="@dimen/_18sdp"
+            android:text="   --"
+            />
+
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/imgCircle"
         android:layout_marginTop="@dimen/_25sdp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/simpleProgressBar"

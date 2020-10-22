@@ -58,8 +58,14 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
     TextView txtPath;
     @BindView(R.id.simpleProgressBar)
     ProgressBar progressBar;
+    @BindView(R.id.txtRedNumber)
+    TextView txtRedNumber;
+    @BindView(R.id.txtGreenNumber)
+    TextView txtGreenNumber;
+    @BindView(R.id.txtBlueNumber)
+    TextView txtBlueNumber;
 
-    String imagePath , colorName;
+    String imagePath, colorName;
     PyObject pyObject;
     PyObject colorMatch;
     String rCode, gCode, bCode, colorNumber;
@@ -92,7 +98,6 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
         imgGallery.setOnClickListener(this);
 
 
-
     }
 
     @Override
@@ -107,6 +112,7 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
 
                 Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(takePicture, 1);
+                imgCircle.setVisibility(View.GONE);
 
 
                 break;
@@ -115,6 +121,7 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
 
                 Intent intentGallery = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intentGallery, 2);
+                imgCircle.setVisibility(View.GONE);
 
 
                 break;
@@ -163,8 +170,6 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
                 callThePythonCode();
 
 
-
-
             } else if (requestCode == 2) {
                 Uri selectedImage = data.getData();
                 String[] filePath = {MediaStore.Images.Media.DATA};
@@ -180,6 +185,18 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
                 Log.e(TAG, "PATH FROM GALLERY: " + picturePath);
 
                 callThePythonCode();
+
+
+            }
+        } else {
+
+            if(requestCode == 1 && resultCode == RESULT_CANCELED){
+
+                progressBar.setVisibility(View.GONE);
+
+            }else if(requestCode == 2 && resultCode == RESULT_CANCELED){
+
+                progressBar.setVisibility(View.GONE);
 
 
             }
@@ -220,43 +237,42 @@ public class ColorDetectorActivity extends AppCompatActivity implements View.OnC
             }
 
 
-
             //set RGB
 
-            r = String.format("%.0f",Float.parseFloat(rCode));
-            g = String.format("%.0f",Float.parseFloat(gCode));
-            b = String.format("%.0f",Float.parseFloat(bCode));
-            num = String.format("%.2f",Float.parseFloat(colorNumber));
+            r = String.format("%.0f", Float.parseFloat(rCode));
+            g = String.format("%.0f", Float.parseFloat(gCode));
+            b = String.format("%.0f", Float.parseFloat(bCode));
+            num = String.format("%.2f", Float.parseFloat(colorNumber));
 
-            Log.e(TAG, "callThePythonCode: "+ String.format("%.0f",Float.parseFloat(rCode))+ " "+ String.format("%.0f",Float.parseFloat(gCode))+ " "+String.format("%.0f",Float.parseFloat(bCode)));
+            Log.e(TAG, "callThePythonCode: " + String.format("%.0f", Float.parseFloat(rCode)) + " " + String.format("%.0f", Float.parseFloat(gCode)) + " " + String.format("%.0f", Float.parseFloat(bCode)));
 
 
             //Set the textview
 
-            txtColorName.setText("\t\t"+colorName);
-            txtColorNumber.setText("\t\t"+num);
+            txtColorName.setText("\t\t" + colorName);
+            txtColorNumber.setText("\t\t" + num);
+            txtRedNumber.setText("\t\t" + b);
+            txtGreenNumber.setText("\t\t" + g);
+            txtBlueNumber.setText("\t\t" + r);
 
-            if(txtColorNumber.getText().toString().matches("")){
+
+            if (txtColorNumber.getText().toString().matches("")) {
 
                 progressBar.setVisibility(View.VISIBLE);
 
 
-
-
-            }else {
+            } else {
 
                 progressBar.setVisibility(View.GONE);
 
             }
 
-
+            imgCircle.setVisibility(View.VISIBLE);
             Drawable tempDrawable = getResources().getDrawable(R.drawable.custom_shapes);
             LayerDrawable bubble = (LayerDrawable) tempDrawable;
             GradientDrawable solidColor = (GradientDrawable) bubble.findDrawableByLayerId(R.id.outerRectangle);
-            solidColor.setColor(Color.rgb(Integer.parseInt(r),Integer.parseInt(g),Integer.parseInt(b)));
+            solidColor.setColor(Color.rgb(Integer.parseInt(b), Integer.parseInt(g), Integer.parseInt(r)));
             imgCircle.setImageDrawable(tempDrawable);
-
-
 
 
         }
